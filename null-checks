@@ -1,0 +1,17 @@
+= if(
+  ri!List = "",
+  true(),
+  if(
+    isnull(
+      ri!List
+    ),
+    true(),
+    if(
+      length(
+        ri!List
+      ) > 0,
+      false(),
+      true()
+    )
+  )
+)
