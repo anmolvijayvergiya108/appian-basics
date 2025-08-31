@@ -1,0 +1,136 @@
+a!sideBySideLayout(
+  items: {
+    a!sideBySideItem(),
+    a!sideBySideItem( 
+      item: a!richTextDisplayField(
+        labelPosition: "COLLAPSED",
+        value: {
+          a!richTextIcon(
+            icon: "angle-double-left",
+            link: a!dynamicLink(
+              value: 1,
+              saveInto: ri!pagingInfo.startIndex,
+              showWhen: tointeger(ri!pagingInfo.startIndex) <> 1
+            ),
+            linkStyle: "STANDALONE",
+            color: if(
+              tointeger(ri!pagingInfo.startIndex) = 1,
+              "SECONDARY",
+              "ACCENT"
+            ),
+            size: "MEDIUM_PLUS"
+          ),
+          a!richTextIcon(
+            icon: "angle-left",
+            link: a!dynamicLink(
+              value: tointeger(ri!pagingInfo.startIndex) - tointeger(ri!pagingInfo.batchSize),
+              saveInto: ri!pagingInfo.startIndex,
+              showWhen: tointeger(ri!pagingInfo.startIndex) <> 1
+            ),
+            linkStyle: "STANDALONE",
+            color: if(
+              tointeger(ri!pagingInfo.startIndex) = 1,
+              "SECONDARY",
+              "ACCENT"
+            ),
+            size: "MEDIUM_PLUS"
+          )
+        },
+        showWhen: or(ri!totalCount > 0),
+        align: "RIGHT"
+      ),
+      width: "MINIMIZE"
+    ),
+    a!sideBySideItem(
+      item: a!richTextDisplayField(
+        labelPosition: "COLLAPSED",
+        value: {
+          a!richTextItem(
+            text: concat(
+              ri!pagingInfo.startIndex,
+              " - ",
+              if(
+                ri!pagingInfo.startIndex + ri!pagingInfo.batchSize > ri!totalCount,
+                ri!totalCount,
+                ri!pagingInfo.startIndex + ri!pagingInfo.batchSize - 1
+              )
+            ),
+            style: "STRONG"
+          ),
+          a!richTextItem(text: concat(" of ", ri!totalCount))
+
+        },
+        showWhen: or(ri!totalCount > 0),
+        align: "RIGHT"
+      ),
+      width: "MINIMIZE"
+    ),
+    a!sideBySideItem(
+      item: a!richTextDisplayField(
+        labelPosition: "COLLAPSED",
+        value: {
+          a!richTextIcon(
+            icon: "angle-right",
+            link: a!dynamicLink(
+              value: tointeger(ri!pagingInfo.startIndex) + tointeger(ri!pagingInfo.batchSize),
+              saveInto: ri!pagingInfo.startIndex,
+              showWhen: (
+                tointeger(ri!pagingInfo.startIndex) + tointeger(ri!pagingInfo.batchSize)
+              ) <= tointeger(ri!totalCount)
+            ),
+            linkStyle: "STANDALONE",
+            color: if(
+              (
+                tointeger(ri!pagingInfo.startIndex) + tointeger(ri!pagingInfo.batchSize)
+              ) <= tointeger(ri!totalCount),
+              "ACCENT",
+              "SECONDARY"
+            ),
+            size: "MEDIUM_PLUS"
+          ),
+          a!richTextIcon(
+            icon: "angle-double-right",
+            link: a!dynamicLink(
+              value: if(
+                mod(
+                  tointeger(ri!totalCount),
+                  tointeger(ri!pagingInfo.batchSize)
+                ) > 0,
+                tointeger(ri!totalCount) - mod(
+                  tointeger(ri!totalCount),
+                  tointeger(ri!pagingInfo.batchSize)
+                ) + 1,
+                tointeger(ri!totalCount) - tointeger(ri!pagingInfo.batchSize) + 1
+              ),
+              saveInto: ri!pagingInfo.startIndex,
+              showWhen: (
+                tointeger(ri!pagingInfo.startIndex) + tointeger(ri!pagingInfo.batchSize)
+              ) <= tointeger(ri!totalCount)
+            ),
+            linkStyle: "STANDALONE",
+            color: if(
+              (
+                tointeger(ri!pagingInfo.startIndex) + tointeger(ri!pagingInfo.batchSize)
+              ) <= tointeger(ri!totalCount),
+              "ACCENT",
+              "SECONDARY"
+            ),
+            size: "MEDIUM_PLUS"
+          )
+        },
+        showWhen: or(ri!totalCount > 0),
+        align: "RIGHT"
+      ),
+      width: "MINIMIZE"
+    )
+
+  },
+  alignVertical: "MIDDLE",
+  showWhen: and(
+    or(ri!totalCount > 0),
+    not(
+      or(ri!totalCount <= ri!pagingInfo.batchSize)
+    )
+  ),
+  spacing: "NONE"
+)
